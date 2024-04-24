@@ -4,10 +4,17 @@ version = "24.4.23"
 description = "Lorem"
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = ["fastapi", "uvicorn"]
+dependencies = ["panel", "stravalib", "altair[all]"]
 
 [project.optional-dependencies]
-dev = ["pytest", "pytest-cov", "ruff", "watchdog", "httpx"]
+dev = [
+  "pytest",
+  "pytest-cov",
+  "ruff",
+  "watchfiles",
+  "ipykernel",
+  "jupyter_black",
+]
 
 [tool.ruff]
 exclude = [".env", ".venv", "venv", "notebooks"]
