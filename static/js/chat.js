@@ -201,6 +201,7 @@ function MessageInput() {
       <div class="right">
         <button type="submit" disabled=${generating.value}>Send</button>
         <button onclick=${stop} disabled=${!generating.value}>Stop</button>
+        <button onclick=${stop}>Analyze</button>
         <button onclick=${reset}>Reset</button>
       </div>
     </form>

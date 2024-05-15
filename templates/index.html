@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+    <meta name="color-scheme" content="light dark" />
+    <title>Tanda Assistant</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+    <script type="module" src="/static/js/chat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.28.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.18.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.25.0"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const visualizations = {{ visualizations | tojson }};
+
+        Object.keys(visualizations).forEach(function(key) {
+          const spec = JSON.parse(visualizations[key]);
+          vegaEmbed('#' + key, spec,  {renderer: "svg", actions: false});
+        });
+
+      });
+    </script>
+  </head>
+
+  <body>
+    <header>
+      <h1>Tanda Assistant</h1>
+    </header>
+
+    <div class="description">
+      {% if logged_in %}
+      <p>Hi {{ user_name }}!</p>
+      <a href="/logout">
+        <button class="logout-button">Logout</button>
+      </a>
+      {% else %}
+      <a href="{{ authorize_url }}">
+        <button class="login-button">Login with Strava</button>
+      </a>
+      {% endif %}
+    </div>
+    <br />
+
+    <div class="main-content">
+      <div class="visualizations">
+        <div class="visualization" id="weekly_chart">Visualization 1</div>
+        <div class="visualization" id="rolling_tanda">Visualization 2</div>
+        <div class="visualization">Visualization 3</div>
+      </div>
+
+      <div id="chatcontainer">
+        <!-- Chat content will be dynamically rendered here -->
+      </div>
+    </div>
+
+    <footer>
+      <p>This is an example footer</p>
+    </footer>
+  </body>
+</html>

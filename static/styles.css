@@ -9,6 +9,25 @@ body {
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
+  flex: 1 1 33%;
+}
+
+.visualizations {
+  flex: 2 1 66%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+  gap: 10px;
+  box-sizing: border-box;
+  padding: 5px;
+}
+
+.visualization {
+  text-align: center;
+  width: 100%;
+}
+
+.vega-actions {
+  display: none;
 }
 
 main {
@@ -108,9 +127,10 @@ details[open] {
 
 textarea {
   padding: 5px;
-  /* flex-grow: 1; */
   width: 100%;
   box-sizing: border-box;
+  display: block;
+  margin: 0.5em;
 }
 
 pre code {

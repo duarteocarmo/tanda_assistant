@@ -25,7 +25,6 @@ class ChatUI:
             show_rerun=False,
             show_button_name=False,
             message_params={
-                "stylesheets": [],
                 "show_avatar": False,
                 "show_user": True,
                 "show_copy_icon": False,
