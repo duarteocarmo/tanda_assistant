@@ -1,6 +1,17 @@
+import asyncio
+import io
+import json
+
 import redis
-from fastapi import FastAPI
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi import FastAPI, Request
+from fastapi.responses import (
+    HTMLResponse,
+    JSONResponse,
+    RedirectResponse,
+    StreamingResponse,
+)
+from fastapi.staticfiles import StaticFiles
+from starlette.responses import FileResponse
 from stravalib.client import Client
 
 CLIENT_ID = "125463"
@@ -11,10 +22,16 @@ REDIS_URL = "redis://:INWODKrbivLwjrvWprq4ofdekb6hR0MJvy8xdLL3Fs2c4mzZxjhOMFULNb
 app = FastAPI()
 client = Client()
 r = redis.Redis.from_url(REDIS_URL)
+app.mount("/static", StaticFiles(directory="static", html=True), name="static")
 
 
 @app.get("/", response_class=HTMLResponse)
-def read_root():
+async def home():
+    return FileResponse("static/index.html")
+
+
+@app.get("/login", response_class=HTMLResponse)
+async def login():
     authorize_url = client.authorization_url(
         client_id=CLIENT_ID, redirect_uri=REDIRECT_URL
     )
@@ -31,7 +48,7 @@ def read_root():
 
 
 @app.get("/authorized/", response_class=HTMLResponse)
-def get_code(state=None, code=None, scope=None):
+async def get_code(state=None, code=None, scope=None):
     token_response = client.exchange_code_for_token(
         client_id=CLIENT_ID, client_secret=CLIENT_SECRET, code=code
     )
@@ -64,9 +81,25 @@ def get_code(state=None, code=None, scope=None):
 
 
 @app.get("/logout/")
-def logout():
+async def logout():
     client.deauthorize()
     return RedirectResponse(url="/")
+
+
+@app.post("/completion")
+async def completion(request: Request):
+    data = await request.json()
+    print(data)
+
+    async def stream(text):
+        for word in text.split():
+            await asyncio.sleep(0.2)
+            content = f" {word}"
+            yield "data: {}\n\n".format(json.dumps({"content": content}))
+
+    text = "This a response to your request!"
+
+    return StreamingResponse((stream(text)), media_type="text/plain")
 
 
 # def save_object(obj, filename):
